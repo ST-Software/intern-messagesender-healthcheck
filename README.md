@@ -10,7 +10,7 @@ Create application for testing and checking *MessageSender* healthcheck.
 1. Get the basics of **HTTP** protocol.
 2. See the simple structure of *HealthCheckDto* (available on [application root](https://10.0.1.221:9000)).
 3. Create a console application for testing Service availability.
-  * Application shows deployed version of service, db connection status, service status + status of each workers
+  * Application should show deployed version of service, db connection status, service status + status of each workers
   * Shown data should be logged into file (filepath should be defined in application config)
 4. ...
 
