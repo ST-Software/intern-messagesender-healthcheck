@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Net;
 using System.IO;
+using Newtonsoft.Json.Linq;
 
 namespace HealthCheck.Model
 {
@@ -22,10 +23,30 @@ namespace HealthCheck.Model
 
         public void DoThings()
         {
-            //Need download or copy the XML file from 10.0.1.221:9000
+            //get certificate
+            ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
+            //ask for http status
+            HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create("https://10.0.1.221:9000/");
+            webRequest.AllowAutoRedirect = false;
+            HttpWebResponse response = (HttpWebResponse)webRequest.GetResponse();
+            Output += response.StatusCode.ToString();
+            if(Output != "OK") { return; }
 
+            WebClient webClient = new WebClient();
+            webClient.DownloadFile("https://10.0.1.221:9000/","workers.xml");
+
+
+
+
+
+
+
+
+            //Need download or copy the XML file from 10.0.1.221:9000
+            /*
             using (XmlReader xr = XmlReader.Create(@"workers.xml"))
             {
+                
                 string name = "";
                 string status = "";
                 string element = "";
@@ -62,8 +83,10 @@ namespace HealthCheck.Model
                     else if ((xr.NodeType == XmlNodeType.EndElement) && (xr.Name == "WorkerStatusDto"))
                         Workers.Add(new Worker(name, status));
                 }
+                
                 WriteIt(Workers);
             }
+            */
         }
 
         public void WriteIt(List<Worker> workers)
