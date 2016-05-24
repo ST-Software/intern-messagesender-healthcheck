@@ -35,16 +35,24 @@ namespace HealthCheck.Model
                     }
                     else if (xr.NodeType == XmlNodeType.Text)
                     {
-                        if()
-                        if (element == "Name")
+                        switch (element)
                         {
-                            name = xr.Value;
+                            case "IsDbConnected":
+                                Console.WriteLine("IsDbConnected - " + xr.Value);
+                                break;
+                            case "ServiceStatus":
+                                Console.WriteLine("ServiceStatus - " + xr.Value);
+                                break;
+                            case "Version":
+                                Console.WriteLine("Version: " + xr.Value);
+                                break;
+                            case "Name":
+                                name = xr.Value;
+                                break;
+                            case "Status":
+                                status = xr.Value;
+                                break;
                         }
-                        else if (element == "Status")
-                        {
-                            status = xr.Value;
-                        }
-                       
                     }
 
                     else if ((xr.NodeType == XmlNodeType.EndElement) && (xr.Name == "WorkerStatusDto"))
