@@ -4,12 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Net;
+using System.IO;
 
 namespace HealthCheck.Model
 {
     class Body
     {
         List<Worker> Workers = new List<Worker>();
+        public string Output { get; private set; } = "";
 
         public Body()
         {
@@ -19,7 +22,8 @@ namespace HealthCheck.Model
 
         public void DoThings()
         {
-            
+            //Need download or copy the XML file from 10.0.1.221:9000
+
             using (XmlReader xr = XmlReader.Create(@"workers.xml"))
             {
                 string name = "";
@@ -30,7 +34,7 @@ namespace HealthCheck.Model
                 {
                     if (xr.NodeType == XmlNodeType.Element)
                     {
-                        element = xr.Name; // název aktuálního elementu
+                        element = xr.Name;
                         
                     }
                     else if (xr.NodeType == XmlNodeType.Text)
@@ -38,13 +42,13 @@ namespace HealthCheck.Model
                         switch (element)
                         {
                             case "IsDbConnected":
-                                Console.WriteLine("IsDbConnected - " + xr.Value);
+                                Output +="IsDbConnected - " + xr.Value + Environment.NewLine;
                                 break;
                             case "ServiceStatus":
-                                Console.WriteLine("ServiceStatus - " + xr.Value);
+                                Output +="ServiceStatus - " + xr.Value + Environment.NewLine;
                                 break;
                             case "Version":
-                                Console.WriteLine("Version: " + xr.Value);
+                                Output += "Version: " + xr.Value + Environment.NewLine;
                                 break;
                             case "Name":
                                 name = xr.Value;
@@ -66,8 +70,10 @@ namespace HealthCheck.Model
         {
             foreach (Worker wor in workers)
             {
-                Console.WriteLine(wor);
+                Output += wor + Environment.NewLine;
             }
+            Console.WriteLine(Output);
+            File.WriteAllText(@"C:\Users\Vítek\ST_SW\intern-messagesender-healthcheck\logs\Data.txt", Output);
             Console.ReadKey();
         }
     }
