@@ -3,18 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml;
-using System.ServiceModel;
-using System.ServiceModel.Channels;
+using HealthCheck.Model;
 
 
 namespace HealthCheck
 {
-    class HealthClass
+    class Program
     {
-        static void Main()
+       public static void Main()
         {
-            
-        }
+            Body b = new Body();
+        } 
     }
 }
