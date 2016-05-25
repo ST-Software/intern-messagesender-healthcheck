@@ -13,7 +13,6 @@ namespace HealthCheck.Model
 {
     class Body
     {
-        List<Worker> Workers = new List<Worker>();
         public StringWriter Output = new StringWriter();
 
         public Body()
@@ -22,11 +21,18 @@ namespace HealthCheck.Model
             //get certificate
             ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
             //ask for http status
-            HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create("https://10.0.1.221:9000/");
-            webRequest.AllowAutoRedirect = false;
-            HttpWebResponse response = (HttpWebResponse)webRequest.GetResponse();
-            Output.Write(response.StatusCode.ToString());
-            if(Output. != "Status - OK") { Console.WriteLine(Output); return; }
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create("https://10.0.1.221:9000/");
+                webRequest.AllowAutoRedirect = false;
+                HttpWebResponse response = (HttpWebResponse)webRequest.GetResponse();
+                Output.Write(response.StatusCode.ToString() + Environment.NewLine);
+                if (response.StatusCode.ToString() != "OK") { Console.WriteLine(Output); return; }
+            }
+            catch
+            {
+                throw new System.ArgumentException("Parameter cannot be null", "original");
+            }
             //download file (as string)
             WebClient webClient = new WebClient();
             string text = webClient.DownloadString("https://10.0.1.221:9000/");
@@ -34,26 +40,19 @@ namespace HealthCheck.Model
             JObject stuff = JObject.Parse(text);
             JArray workers = (JArray)stuff["Workers"];
 
-            Console.WriteLine(workers[0]["Name"]);
-
-            Output += Environment.NewLine + "Is Db Connected - " + stuff["IsDbConnected"] + Environment.NewLine +
-                      "Workers count - " + workers.Count + Environment.NewLine;
+            Output.WriteLine("Is Db Connected - " + stuff["IsDbConnected"]);
+            Output.WriteLine("Version - " + stuff["Version"]);
+            Output.WriteLine("Workers count - " + workers.Count);
+            for (int i = 0; i < workers.Count; i++)
+            {
+                Output.WriteLine(" - Worker " + workers[i]["Name"] + " - " + workers[i]["StatusText"]);
+            }
                       
             Console.WriteLine(Output);
             Console.ReadKey();
 
         }
-
-        public void WriteIt(List<Worker> workers)
-        {
-            foreach (Worker wor in workers)
-            {
-                Output += wor + Environment.NewLine;
-            }
-            Console.WriteLine(Output);
-            File.WriteAllText(@"C:\Users\Vítek\ST_SW\intern-messagesender-healthcheck\logs\Data.txt", Output);
-            Console.ReadKey();
-        }
+        
 
         
     }
