@@ -13,6 +13,7 @@ namespace HealthCheck.Model
                 HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(adress);
                 webRequest.AllowAutoRedirect = false;
                 HttpWebResponse response = (HttpWebResponse)webRequest.GetResponse();
+
                 output = response.StatusCode.ToString() + Environment.NewLine;
             }
             catch

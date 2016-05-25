@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Configuration;
 using HealthCheck.Model;
 using System.Net;
 using System.IO;
@@ -15,7 +12,7 @@ namespace HealthCheck
         public static void Main()
         {
             ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
-            string adress = "https://10.0.1.221:9000/";
+            string adress = ConfigurationManager.AppSettings["adress"];
             string status;
             Status stat = new Status();
             if (stat.GetStatus(adress, out status) == false)
@@ -28,7 +25,7 @@ namespace HealthCheck
             output.WriteLine("Connection status - " + status);
             Conclusion con = new Conclusion();
             output.WriteLine(con.GetText(adress));
-
+            File.WriteAllText(ConfigurationManager.AppSettings["path"], output.ToString());
 
             Console.WriteLine(output);
             Console.ReadKey();
