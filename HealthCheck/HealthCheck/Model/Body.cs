@@ -8,6 +8,7 @@ using System.Net;
 using System.IO;
 using Newtonsoft.Json.Linq;
 
+
 namespace HealthCheck.Model
 {
     class Body
@@ -30,10 +31,18 @@ namespace HealthCheck.Model
             webRequest.AllowAutoRedirect = false;
             HttpWebResponse response = (HttpWebResponse)webRequest.GetResponse();
             Output += response.StatusCode.ToString();
-            if(Output != "OK") { return; }
-
+            if(Output != "OK") { Console.WriteLine(Output); return; }
+            //download file (as .txt)
             WebClient webClient = new WebClient();
-            webClient.DownloadFile("https://10.0.1.221:9000/","workers.xml");
+            webClient.DownloadFile("https://10.0.1.221:9000/","workers.txt");
+            //read .txt file and convert it to string
+            string xml = File.ReadAllText(Environment.CurrentDirectory + "\\workers.txt");
+
+            dynamic stuff = JObject.Parse(xml);
+            Output += Environment.NewLine + "Is Db Connected - " + stuff.IsDbConnected + Environment.NewLine
+                + " Workers - " + stuff.Workers.Name;
+            Console.WriteLine(Output);
+            Console.ReadKey();
 
 
 
@@ -99,5 +108,7 @@ namespace HealthCheck.Model
             File.WriteAllText(@"C:\Users\Vítek\ST_SW\intern-messagesender-healthcheck\logs\Data.txt", Output);
             Console.ReadKey();
         }
+
+        
     }
 }
