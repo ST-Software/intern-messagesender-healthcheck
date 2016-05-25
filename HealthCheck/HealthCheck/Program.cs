@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using HealthCheck.Model;
+using System.Net;
 
 
 namespace HealthCheck
@@ -12,6 +13,7 @@ namespace HealthCheck
     {
        public static void Main()
         {
+            ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
             Body b = new Body();
         } 
     }

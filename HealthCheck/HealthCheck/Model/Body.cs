@@ -18,8 +18,6 @@ namespace HealthCheck.Model
         public Body()
         {
             Output.Write("Status - ");
-            //get certificate
-            ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
             //ask for http status
             try
             {
