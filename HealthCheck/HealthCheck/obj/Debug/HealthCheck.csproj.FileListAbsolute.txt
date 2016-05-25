@@ -1,0 +1,14 @@
+c:\users\vítek\documents\visual studio 2015\Projects\HealthCheck\HealthCheck\bin\Debug\HealthCheck.exe.config
+c:\users\vítek\documents\visual studio 2015\Projects\HealthCheck\HealthCheck\bin\Debug\HealthCheck.exe
+c:\users\vítek\documents\visual studio 2015\Projects\HealthCheck\HealthCheck\bin\Debug\HealthCheck.pdb
+c:\users\vítek\documents\visual studio 2015\Projects\HealthCheck\HealthCheck\obj\Debug\HealthCheck.csprojResolveAssemblyReference.cache
+c:\users\vítek\documents\visual studio 2015\Projects\HealthCheck\HealthCheck\obj\Debug\HealthCheck.exe
+c:\users\vítek\documents\visual studio 2015\Projects\HealthCheck\HealthCheck\obj\Debug\HealthCheck.pdb
+C:\Users\Vítek\ST_SW\intern-messagesender-healthcheck\HealthCheck\HealthCheck\bin\Debug\HealthCheck.exe.config
+C:\Users\Vítek\ST_SW\intern-messagesender-healthcheck\HealthCheck\HealthCheck\obj\Debug\HealthCheck.exe
+C:\Users\Vítek\ST_SW\intern-messagesender-healthcheck\HealthCheck\HealthCheck\obj\Debug\HealthCheck.pdb
+C:\Users\Vítek\ST_SW\intern-messagesender-healthcheck\HealthCheck\HealthCheck\obj\Debug\HealthCheck.csprojResolveAssemblyReference.cache
+C:\Users\Vítek\ST_SW\intern-messagesender-healthcheck\HealthCheck\HealthCheck\bin\Debug\HealthCheck.exe
+C:\Users\Vítek\ST_SW\intern-messagesender-healthcheck\HealthCheck\HealthCheck\bin\Debug\HealthCheck.pdb
+C:\Users\Vítek\ST_SW\intern-messagesender-healthcheck\HealthCheck\HealthCheck\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Vítek\ST_SW\intern-messagesender-healthcheck\HealthCheck\HealthCheck\bin\Debug\Newtonsoft.Json.xml
