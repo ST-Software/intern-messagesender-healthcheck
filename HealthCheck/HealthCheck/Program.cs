@@ -13,18 +13,18 @@ namespace HealthCheck
         {
             ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
             string adress = ConfigurationManager.AppSettings["adress"];
-            string status;
+            
             Status stat = new Status();
-            if (stat.GetStatus(adress, out status) == false)
+            if (stat.GetStatus(adress) == false)
             {
                 Console.WriteLine("Connection error.");
                 Console.ReadKey();
                 return;
             }
             StringWriter output = new StringWriter();
-            output.WriteLine("Connection status - " + status);
-            Conclusion con = new Conclusion();
-            output.WriteLine(con.GetText(adress));
+            output.WriteLine("Connection status - " + stat.Output);
+            //Conclusion con = new Conclusion();
+            //output.WriteLine(con.GetText(adress));
             File.WriteAllText(ConfigurationManager.AppSettings["path"], output.ToString());
 
             Console.WriteLine(output);

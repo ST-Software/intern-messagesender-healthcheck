@@ -11,6 +11,6 @@ namespace HealthCheck.Model
         public bool IsDbConnected { get; set; }
         public string ServiceStatus { get; set; }
         public string Version { get; set; }
-        public List<WorkerStatusDto> Workers = new List<WorkerStatusDto>();
+        public List<WorkerStatusDto> Workers { get; set; }
     }
 }
