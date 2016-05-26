@@ -6,8 +6,6 @@ namespace HealthCheck.Model
 {
     class HealthCheckContent
     {
-        
-
         public HealthCheckDto GetStatusAndContent(string adress,HealthCheckDto healthclass, out string status)
         {
             string text = "";
@@ -25,7 +23,6 @@ namespace HealthCheck.Model
                 StreamReader readStream = new StreamReader(stream);
                 text = readStream.ReadToEnd();
                 return healthclass = JsonConvert.DeserializeObject<HealthCheckDto>(text); 
-               
             }
             catch
             {
