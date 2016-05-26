@@ -3,14 +3,32 @@ using System.Configuration;
 using HealthCheck.Model;
 using System.Net;
 using System.IO;
+using System.Timers;
 
 
 namespace HealthCheck
 {
     class Program
     {
-        
         public static void Main()
+        {
+            Program prog = new Program();
+            prog.Code();
+            int interval;
+            Timer t = new Timer();
+            int.TryParse(ConfigurationManager.AppSettings["refresh"], out interval);
+            t.Interval = interval;
+            t.Start();
+            t.Elapsed += prog.OnTimeEvent;
+            Console.ReadKey();
+        }
+
+        public void OnTimeEvent(object sender, ElapsedEventArgs e)
+        {
+            Code();
+        }
+
+        public void Code()
         {
             string status;
             ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
@@ -21,8 +39,7 @@ namespace HealthCheck
             StringWriter Output = new StringWriter();
             if (healthcheckdto == null)
             {
-                Console.WriteLine("Error");
-                Console.ReadKey();
+                Console.WriteLine("Connection error");
                 return;
             }
             Output.WriteLine("Status - " + status);
@@ -41,7 +58,7 @@ namespace HealthCheck
             File.WriteAllText(ConfigurationManager.AppSettings["path"], Output.ToString());
 
             Console.WriteLine(Output);
-            Console.ReadKey();
+            
 
         }
     }
