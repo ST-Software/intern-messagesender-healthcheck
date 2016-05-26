@@ -54,7 +54,6 @@
   <ItemGroup>
     <Compile Include="Model\HealthCheckDto.cs" />
     <Compile Include="Model\Status.cs" />
-    <Compile Include="Model\Conclusion.cs" />
     <Compile Include="Model\WorkerStatusDto.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

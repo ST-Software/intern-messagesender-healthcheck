@@ -9,25 +9,38 @@ namespace HealthCheck
 {
     class Program
     {
+        
         public static void Main()
         {
+            string status;
             ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
             string adress = ConfigurationManager.AppSettings["adress"];
-            
-            Status stat = new Status();
-            if (stat.GetStatus(adress) == false)
+            HealthCheckDto healthcheckdto = new HealthCheckDto();
+            HealthCheckContent stat = new HealthCheckContent();
+            healthcheckdto = stat.GetStatusAndContent(adress, healthcheckdto, out status);
+            StringWriter Output = new StringWriter();
+            if (healthcheckdto == null)
             {
-                Console.WriteLine("Connection error.");
+                Console.WriteLine("Error");
                 Console.ReadKey();
                 return;
             }
-            StringWriter output = new StringWriter();
-            output.WriteLine("Connection status - " + stat.Output);
-            //Conclusion con = new Conclusion();
-            //output.WriteLine(con.GetText(adress));
-            File.WriteAllText(ConfigurationManager.AppSettings["path"], output.ToString());
+            Output.WriteLine("Status - " + status);
+            Output.WriteLine("IsDbConnected - " + healthcheckdto.IsDbConnected);
+            Output.WriteLine("Version - " + healthcheckdto.Version);
+            Output.WriteLine("Workers count - " + healthcheckdto.Workers.Count);
+            foreach (var item in healthcheckdto.Workers)
+            {
+                Output.WriteLine(" - Worker " + item.Name + " is " + item.StatusText);
+            }
+            if (healthcheckdto == null)
+            {
+                Console.WriteLine("Error");
+            }
+            
+            File.WriteAllText(ConfigurationManager.AppSettings["path"], Output.ToString());
 
-            Console.WriteLine(output);
+            Console.WriteLine(Output);
             Console.ReadKey();
 
         }

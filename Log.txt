@@ -1,8 +1,7 @@
-Connection status - OK
+Status - 200 (OK)
 IsDbConnected - True
 Version - 1.0.8.0
 Workers count - 3
  - Worker MessageSenderWorker (sending messages) is Active
  - Worker MessageStatusCheckerWorker (checking message statuses on provider side) is Active
  - Worker ClientNotificationWorker (notifies client about messages delivery/failure) is Active
-
