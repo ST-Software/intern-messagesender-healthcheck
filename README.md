@@ -12,7 +12,8 @@ Create application for testing and checking *MessageSender* healthcheck.
 3. Create a console application for testing Service availability.
   * Application should show deployed version of service, db connection status, service status + status of each workers
   * Shown data should be logged into file (filepath should be defined in application config)
-4. ...
+  * Service endpoint should be editable in app config as well
+4. Add possibility to run application in cycle and reload data every x seconds. Refresh time should be defined in application config. This mode should be enabled via app input parameter or app config.
 
 ___
 ###Notes
