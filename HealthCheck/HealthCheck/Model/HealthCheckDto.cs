@@ -8,9 +8,10 @@ namespace HealthCheck.Model
 {
     class HealthCheckDto
     {
-        public bool IsDbConnected { get; set; }
-        public string ServiceStatus { get; set; }
+        public bool IsDbConnected { get; set; } = false;
         public string Version { get; set; }
+        public int HttpResponseStatus { get; set; }
+        public string HttpResponseStatusText { get; set; }
         public List<WorkerStatusDto> Workers { get; set; }
     }
 }
