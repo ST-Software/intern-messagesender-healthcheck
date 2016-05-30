@@ -17,9 +17,8 @@ namespace HealthCheck.Model
             try
             {
                 HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(adress);
-                httpWebRequest.AllowAutoRedirect = false;
+                //httpWebRequest.AllowAutoRedirect = false;
                 Stream stream = httpWebRequest.GetRequestStream();
-                stream.Close();
 
                 WebResponse response = httpWebRequest.GetResponse();
                 stream = response.GetResponseStream();
@@ -27,13 +26,14 @@ namespace HealthCheck.Model
                 StreamReader streamreader = new StreamReader(stream);
                 text = streamreader.ReadToEnd();
 
-                streamreader.Close();
-                stream.Close();
             }
             catch
             {
                 Console.WriteLine("Error");
             }
+
+            
+
         }
     }
 }
