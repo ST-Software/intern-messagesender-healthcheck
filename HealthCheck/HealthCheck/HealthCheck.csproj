@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\HealthCheckBody.cs" />
     <Compile Include="Model\HealthCheckDto.cs" />
     <Compile Include="Model\WorkerStatusDto.cs" />
     <Compile Include="Program.cs" />
