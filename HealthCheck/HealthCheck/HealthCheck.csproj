@@ -53,7 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\HealthCheckDto.cs" />
-    <Compile Include="Model\HealthCheckContent.cs" />
+    <Compile Include="Model\HealthCheckService.cs" />
     <Compile Include="Model\WorkerStatusDto.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -3,46 +3,57 @@ using System.Configuration;
 using HealthCheck.Model;
 using System.Net;
 using System.IO;
+using System.Timers;
 
 
 namespace HealthCheck
 {
     class Program
     {
-        
+        private static string adress;
+        private static string path;
         public static void Main()
         {
-            string status;
             ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
-            string adress = ConfigurationManager.AppSettings["adress"];
-            HealthCheckDto healthcheckdto = new HealthCheckDto();
-            HealthCheckContent stat = new HealthCheckContent();
-            healthcheckdto = stat.GetStatusAndContent(adress, healthcheckdto, out status);
+            adress = ConfigurationManager.AppSettings["adress"];
+            path = ConfigurationManager.AppSettings["path"];
+            HealthCheckBody();
+            int interval;
+            Timer t = new Timer();
+            int.TryParse(ConfigurationManager.AppSettings["refresh"], out interval);
+            t.Interval = interval;
+            t.Start();
+            t.Elapsed += OnTimeEvent;
+            Console.ReadKey();
+        }
+
+        public static void OnTimeEvent(object sender, ElapsedEventArgs e) { HealthCheckBody(); }
+
+        public static void HealthCheckBody()
+        {
+            var healthcheckdto = HealthCheckService.GetHealthCheck(adress);
+            
             StringWriter Output = new StringWriter();
             if (healthcheckdto == null)
             {
-                Console.WriteLine("Error");
-                Console.ReadKey();
-                return;
+                Output.WriteLine("Connection to server failed.");
             }
-            Output.WriteLine("Status - " + status);
-            Output.WriteLine("IsDbConnected - " + healthcheckdto.IsDbConnected);
-            Output.WriteLine("Version - " + healthcheckdto.Version);
-            Output.WriteLine("Workers count - " + healthcheckdto.Workers.Count);
-            foreach (var item in healthcheckdto.Workers)
+            else
             {
-                Output.WriteLine(" - Worker " + item.Name + " is " + item.StatusText);
+                Output.WriteLine("Status - " + healthcheckdto.HttpResponseStatusText);
+                Output.WriteLine("IsDbConnected - " + healthcheckdto.IsDbConnected);
+                Output.WriteLine("Version - " + healthcheckdto.Version);
+                if (healthcheckdto.Workers != null)
+                {
+                    Output.WriteLine("Workers count - " + healthcheckdto.Workers.Count);
+                    foreach (var item in healthcheckdto.Workers)
+                    {
+                        Output.WriteLine(" - Worker " + item.Name + " is " + item.StatusText);
+                    }
+                }
             }
-            if (healthcheckdto == null)
-            {
-                Console.WriteLine("Error");
-            }
-            
-            File.WriteAllText(ConfigurationManager.AppSettings["path"], Output.ToString());
-
+            File.WriteAllText(path, Output.ToString());
             Console.WriteLine(Output);
-            Console.ReadKey();
-
         }
     }
 }

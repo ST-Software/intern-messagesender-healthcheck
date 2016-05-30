@@ -1,18 +1,15 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.IO;
 using Newtonsoft.Json;
 
 namespace HealthCheck.Model
 {
-    class HealthCheckContent
+    class HealthCheckService
     {
-        
-
-        public HealthCheckDto GetStatusAndContent(string adress,HealthCheckDto healthclass, out string status)
+        public static HealthCheckDto GetHealthCheck(string adress)
         {
             string text = "";
-            status = "";
+            string status = "";
             try
             {
                 HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(adress);
@@ -20,13 +17,15 @@ namespace HealthCheck.Model
                 HttpWebResponse response = (HttpWebResponse)webRequest.GetResponse();
                 int statuscode = (int)response.StatusCode;
                 status = statuscode + " (" + response.StatusCode.ToString()+ ")";
-                if (statuscode != 200) { return null; }
+                if (statuscode != 200) { return new HealthCheckDto() { HttpResponseStatus = statuscode, HttpResponseStatusText = status }; }
 
                 Stream stream = response.GetResponseStream();
                 StreamReader readStream = new StreamReader(stream);
                 text = readStream.ReadToEnd();
-                return healthclass = JsonConvert.DeserializeObject<HealthCheckDto>(text); 
-               
+                var healthcheck = JsonConvert.DeserializeObject<HealthCheckDto>(text);
+                healthcheck.HttpResponseStatus = statuscode;
+                healthcheck.HttpResponseStatusText = status;
+                return healthcheck; 
             }
             catch
             {
