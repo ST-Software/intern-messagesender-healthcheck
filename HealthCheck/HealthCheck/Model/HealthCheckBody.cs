@@ -28,7 +28,6 @@ namespace HealthCheck.Model
 
                 }
 
-
                 var healthCheckBody = JsonConvert.DeserializeObject<HealthCheckDto>(text);
                 return healthCheckBody;
                 

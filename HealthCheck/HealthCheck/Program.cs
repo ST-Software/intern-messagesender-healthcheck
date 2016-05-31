@@ -27,13 +27,27 @@ namespace HealthCheck
             
             var healthcheckbody = HealthCheckBody.Check(adress);
             WriteHealthCheckData(healthcheckbody);
+
+            int refreshtime;
+            Timer time = new Timer();
+            int.TryParse(ConfigurationManager.AppSettings["refreshTime"], out refreshtime);
+            time.Interval = refreshtime;
+            time.Start();
+            time.Elapsed += NewTimeHandler;
+
             Console.ReadKey();
 
         }
 
-        static void WriteHealthCheckData(HealthCheckDto healthcheckdto)
+        public static void NewTimeHandler(object o, ElapsedEventArgs e)
+        {
+            WriteHealthCheckData(o as HealthCheckDto);
+        }
+
+        public static void WriteHealthCheckData(HealthCheckDto healthcheckdto)
         {
             
+
             if(healthcheckdto == null)
             {
                 Console.WriteLine("Error");
