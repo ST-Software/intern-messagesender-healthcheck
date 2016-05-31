@@ -6,31 +6,32 @@ using System.Threading.Tasks;
 using System.Net;
 using System.IO;
 using System.Configuration;
+using Newtonsoft.Json;
+using System.Net.Http;
+using System.Web;
 
 namespace HealthCheck.Model
 {
     class HealthCheckBody
     {
-        public static void Check(string text)
+        public static HealthCheckDto Check(string adress)
         {
-            string adress = ConfigurationManager.AppSettings["adress"];
-            try
-            {
-                HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(adress);
-                //httpWebRequest.AllowAutoRedirect = false;
-                Stream stream = httpWebRequest.GetRequestStream();
+            string text = "";
 
-                WebResponse response = httpWebRequest.GetResponse();
-                stream = response.GetResponseStream();
 
-                StreamReader streamreader = new StreamReader(stream);
-                text = streamreader.ReadToEnd();
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(adress);
+                    var result = client.GetAsync("").Result;
+                    string resultContent = result.Content.ReadAsStringAsync().Result;
+                    text = resultContent;
 
-            }
-            catch
-            {
-                Console.WriteLine("Error");
-            }
+                }
+
+
+                var healthCheckBody = JsonConvert.DeserializeObject<HealthCheckDto>(text);
+                return healthCheckBody;
+                
 
             
 
