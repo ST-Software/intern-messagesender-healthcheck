@@ -5,44 +5,45 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net;
 using System.IO;
-using System.Timers;
 using System.Configuration;
 using HealthCheck.Model;
+using System.Threading;
 
 
 namespace HealthCheck
 {
     class Program
     {
-      
+
+        public static string address;
+
         static void Main(string[] args)
         {
             Console.WindowWidth = 120;
             Console.WindowHeight = 30;
+            address = ConfigurationManager.AppSettings["address"];
             ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
-            string adress = ConfigurationManager.AppSettings["adress"];
+
             string path = ConfigurationManager.AppSettings["filePath"];
 
-            Console.WriteLine(adress);
-            
-            var healthcheckbody = HealthCheckBody.Check(adress);
-            WriteHealthCheckData(healthcheckbody);
+            Console.WriteLine(address);
 
             int refreshtime;
-            Timer time = new Timer();
             int.TryParse(ConfigurationManager.AppSettings["refreshTime"], out refreshtime);
-            time.Interval = refreshtime;
-            time.Start();
-            time.Elapsed += NewTimeHandler;
+            Timer timer = new Timer(_ => OnCallBack(), null, 0, refreshtime);
 
             Console.ReadKey();
 
+
         }
 
-        public static void NewTimeHandler(object o, ElapsedEventArgs e)
+        private static void OnCallBack()
         {
-            WriteHealthCheckData(o as HealthCheckDto);
+            var healthcheckprovider = HealthCheckProvider.Check(address);
+            WriteHealthCheckData(healthcheckprovider);
         }
+
+
 
         public static void WriteHealthCheckData(HealthCheckDto healthcheckdto)
         {
@@ -62,6 +63,7 @@ namespace HealthCheck
                 {
                     Console.WriteLine("– " + item.Name + " Status: " + item.StatusText);
                 }
+                Console.WriteLine();
             }
 
         }

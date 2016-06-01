@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HealthCheck.Model
 {
-    class WorkerStatusDto
+    public class WorkerStatusDto
     {
         public string Name { get; set; }
         public string StatusText { get; set; }

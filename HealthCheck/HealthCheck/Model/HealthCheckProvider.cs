@@ -12,16 +12,16 @@ using System.Web;
 
 namespace HealthCheck.Model
 {
-    class HealthCheckBody
+    public class HealthCheckProvider
     {
-        public static HealthCheckDto Check(string adress)
+        public static HealthCheckDto Check(string address)
         {
             string text = "";
 
 
                 using (var client = new HttpClient())
                 {
-                    client.BaseAddress = new Uri(adress);
+                    client.BaseAddress = new Uri(address);
                     var result = client.GetAsync("").Result;
                     string resultContent = result.Content.ReadAsStringAsync().Result;
                     text = resultContent;
