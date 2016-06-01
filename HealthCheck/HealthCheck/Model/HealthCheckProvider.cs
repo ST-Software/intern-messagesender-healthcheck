@@ -18,15 +18,21 @@ namespace HealthCheck.Model
         {
             string text = "";
 
-
+            try
+            {
                 using (var client = new HttpClient())
                 {
                     client.BaseAddress = new Uri(address);
                     var result = client.GetAsync("").Result;
                     string resultContent = result.Content.ReadAsStringAsync().Result;
                     text = resultContent;
-
                 }
+            }
+
+            catch
+            {
+                return null;
+            }
 
                 var healthCheckBody = JsonConvert.DeserializeObject<HealthCheckDto>(text);
                 return healthCheckBody;

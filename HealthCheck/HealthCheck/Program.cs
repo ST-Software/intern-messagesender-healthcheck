@@ -16,6 +16,7 @@ namespace HealthCheck
     {
 
         public static string address;
+        public static int refreshTime;
 
         static void Main(string[] args)
         {
@@ -28,9 +29,9 @@ namespace HealthCheck
 
             Console.WriteLine(address);
 
-            int refreshtime;
-            int.TryParse(ConfigurationManager.AppSettings["refreshTime"], out refreshtime);
-            Timer timer = new Timer(_ => OnCallBack(), null, 0, refreshtime);
+            
+            int.TryParse(ConfigurationManager.AppSettings["refreshTime"], out refreshTime);
+            Timer timer = new Timer(_ => OnCallBack(), null, 0, refreshTime);
 
             Console.ReadKey();
 
@@ -44,14 +45,47 @@ namespace HealthCheck
         }
 
 
-
         public static void WriteHealthCheckData(HealthCheckDto healthcheckdto)
         {
-            
 
             if(healthcheckdto == null)
             {
-                Console.WriteLine("Error");
+                int[] errorValueArray = ConfigurationManager.AppSettings["errorTimeArray"].Split(',').Select(n => Convert.ToInt32(n)).ToArray();
+                for (int i = 0; i < errorValueArray.Length; i += 1)
+                {
+                    refreshTime = errorValueArray[i];
+                    Console.WriteLine("Error, " + "Next attempt is avalaible in " + refreshTime);
+                    Console.WriteLine();
+
+                    //int counter = 1;
+                    //switch (counter)
+                    //{
+                    //    case 1:
+                    //        Console.WriteLine(refreshTime);
+                    //        counter += 1;
+                    //        break;
+                    //    case 2:
+                    //        Console.WriteLine(refreshTime);
+                    //        counter += 1;
+                    //        break;
+                    //    case 3:
+                    //        Console.WriteLine(refreshTime);
+                    //        counter += 1;
+                    //        break;
+                    //    case 4:
+                    //        Console.WriteLine(refreshTime);
+                    //        counter += 1;
+                    //        break;
+                    //    case 5:
+                    //        Console.WriteLine(refreshTime);
+                    //        counter += 1;
+                    //        break;
+                    //    default:
+                    //        Console.WriteLine(25000);
+                    //        break;
+                    //}
+
+                }
             }
             else
             {
