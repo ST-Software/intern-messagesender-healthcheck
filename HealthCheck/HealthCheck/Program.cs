@@ -14,9 +14,11 @@ namespace HealthCheck
 {
     class Program
     {
-
         public static string address;
         public static int refreshTime;
+        public static int[] errorValueArray;
+        public static int time = 5;
+        public static Timer timer;
 
         static void Main(string[] args)
         {
@@ -29,9 +31,8 @@ namespace HealthCheck
 
             Console.WriteLine(address);
 
-            
             int.TryParse(ConfigurationManager.AppSettings["refreshTime"], out refreshTime);
-            Timer timer = new Timer(_ => OnCallBack(), null, 0, refreshTime);
+            timer = new Timer(_ => OnCallBack(), null, 0, refreshTime);
 
             Console.ReadKey();
 
@@ -42,49 +43,30 @@ namespace HealthCheck
         {
             var healthcheckprovider = HealthCheckProvider.Check(address);
             WriteHealthCheckData(healthcheckprovider);
+            
         }
-
 
         public static void WriteHealthCheckData(HealthCheckDto healthcheckdto)
         {
 
             if(healthcheckdto == null)
             {
-                int[] errorValueArray = ConfigurationManager.AppSettings["errorTimeArray"].Split(',').Select(n => Convert.ToInt32(n)).ToArray();
+                errorValueArray = ConfigurationManager.AppSettings["errorTimeArray"].Split(',').Select(j => Convert.ToInt32(j)).ToArray();
+
+                Console.WriteLine("Error, Internet connection is not available, " + "next attempt will be made at " + time + " seconds");
+
+                if (time < 25)
+                {
+                    time += 5;
+                }
+
                 for (int i = 0; i < errorValueArray.Length; i += 1)
                 {
-                    refreshTime = errorValueArray[i];
-                    Console.WriteLine("Error, " + "Next attempt is avalaible in " + refreshTime);
-                    Console.WriteLine();
-
-                    //int counter = 1;
-                    //switch (counter)
-                    //{
-                    //    case 1:
-                    //        Console.WriteLine(refreshTime);
-                    //        counter += 1;
-                    //        break;
-                    //    case 2:
-                    //        Console.WriteLine(refreshTime);
-                    //        counter += 1;
-                    //        break;
-                    //    case 3:
-                    //        Console.WriteLine(refreshTime);
-                    //        counter += 1;
-                    //        break;
-                    //    case 4:
-                    //        Console.WriteLine(refreshTime);
-                    //        counter += 1;
-                    //        break;
-                    //    case 5:
-                    //        Console.WriteLine(refreshTime);
-                    //        counter += 1;
-                    //        break;
-                    //    default:
-                    //        Console.WriteLine(25000);
-                    //        break;
-                    //}
-
+                    timer = new Timer(_ => OnCallBack(), null, 0, errorValueArray[i]);
+                    timer.Change(Timeout.Infinite, Timeout.Infinite);
+                    Thread.Sleep(errorValueArray[i]);
+                    timer.Change(0, errorValueArray[i]);
+                    timer.Change(Timeout.Infinite, Timeout.Infinite);
                 }
             }
             else
@@ -99,7 +81,6 @@ namespace HealthCheck
                 }
                 Console.WriteLine();
             }
-
         }
     }
 }
