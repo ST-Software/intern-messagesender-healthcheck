@@ -48,8 +48,7 @@ namespace HealthCheck
 
         public static void WriteHealthCheckData(HealthCheckDto healthcheckdto)
         {
-
-            if(healthcheckdto == null)
+            if (healthcheckdto == null)
             {
                 errorValueArray = ConfigurationManager.AppSettings["errorTimeArray"].Split(',').Select(j => Convert.ToInt32(j)).ToArray();
 
@@ -60,14 +59,16 @@ namespace HealthCheck
                     time += 5;
                 }
 
+                timer = new Timer(_ => OnCallBack(), null, 0, refreshTime);
+
                 for (int i = 0; i < errorValueArray.Length; i += 1)
                 {
-                    timer = new Timer(_ => OnCallBack(), null, 0, errorValueArray[i]);
                     timer.Change(Timeout.Infinite, Timeout.Infinite);
                     Thread.Sleep(errorValueArray[i]);
                     timer.Change(0, errorValueArray[i]);
                     timer.Change(Timeout.Infinite, Timeout.Infinite);
                 }
+
             }
             else
             {
