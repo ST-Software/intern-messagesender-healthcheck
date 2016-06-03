@@ -17,7 +17,6 @@ namespace HealthCheck
         public static string address;
         public static int refreshTime;
         public static int[] errorValueArray;
-        public static int time = 5;
         public static Timer timer;
 
         static void Main(string[] args)
@@ -28,6 +27,7 @@ namespace HealthCheck
             ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
 
             string path = ConfigurationManager.AppSettings["filePath"];
+            errorValueArray = ConfigurationManager.AppSettings["errorTimeArray"].Split(',').Select(j => Convert.ToInt32(j)).ToArray();
 
             Console.WriteLine(address);
 
@@ -46,29 +46,24 @@ namespace HealthCheck
             
         }
 
+        private static int indexOfErrorTime = 0;
+        
         public static void WriteHealthCheckData(HealthCheckDto healthcheckdto)
         {
+
             if (healthcheckdto == null)
             {
-                errorValueArray = ConfigurationManager.AppSettings["errorTimeArray"].Split(',').Select(j => Convert.ToInt32(j)).ToArray();
 
-                Console.WriteLine("Error, Internet connection is not available, " + "next attempt will be made at " + time + " seconds");
-
-                if (time < 25)
+                if (indexOfErrorTime == errorValueArray.Length)
                 {
-                    time += 5;
+                    indexOfErrorTime--;
                 }
 
-                timer = new Timer(_ => OnCallBack(), null, 0, refreshTime);
+                var ms = errorValueArray[indexOfErrorTime++];
 
-                for (int i = 0; i < errorValueArray.Length; i += 1)
-                {
-                    timer.Change(Timeout.Infinite, Timeout.Infinite);
-                    Thread.Sleep(errorValueArray[i]);
-                    timer.Change(0, errorValueArray[i]);
-                    timer.Change(Timeout.Infinite, Timeout.Infinite);
-                }
+                timer.Change(ms, ms);
 
+                Console.WriteLine("Error, Internet connection is not available, " + "next attempt will be made at " + ms/1000 + " seconds");
             }
             else
             {
